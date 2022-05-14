@@ -7,6 +7,7 @@ import br.com.projeto.appointmentbook.models.exceptions.EntityInUseException;
 import br.com.projeto.appointmentbook.models.exceptions.EntityNotFoundException;
 import br.com.projeto.appointmentbook.repositories.AppointmentRepository;
 import br.com.projeto.appointmentbook.repositories.specs.AppointmentAssocSpecification;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -92,5 +93,9 @@ public class AppointmentService {
 
     public Appointment save(Appointment appointment) {
         return appointmentRepository.save(appointment);
+    }
+
+    public Optional<Appointment> findById(UUID uuid) {
+        return appointmentRepository.findById(uuid);
     }
 }

@@ -40,8 +40,8 @@ public class AppointmentController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> saveCourse(@RequestBody @Valid AppointmentRequest appointmentRequest){
-        log.debug("POST saveCourse courseDto received {} ", appointmentRequest.toString());
+    public ResponseEntity<Object> saveAppointment(@RequestBody @Valid AppointmentRequest appointmentRequest){
+        log.debug("POST saveAppointment AppointmentRequest received {} ", appointmentRequest.toString());
 
         var appointment = new Appointment();
         BeanUtils.copyProperties(appointmentRequest, appointment);
@@ -53,8 +53,8 @@ public class AppointmentController {
 
         appointmentUserService.save(appointmentUser);
 
-        log.debug("POST saveCourse courseId saved {} ", appointmentRequest.getId());
-        log.info("Course saved successfully courseId {} ", appointmentRequest.getId());
+        log.debug("POST saveAppointment appointmentId saved {} ", appointmentRequest.getId());
+        log.info("Appointment saved successfully appointmentId {} ", appointmentRequest.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(appointmentRequest);
     }
 }

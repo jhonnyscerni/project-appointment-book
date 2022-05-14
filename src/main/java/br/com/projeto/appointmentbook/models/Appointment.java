@@ -33,7 +33,7 @@ public class Appointment implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss'Z'")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime dateAppointment;
 
     private String locationService;
@@ -43,7 +43,7 @@ public class Appointment implements Serializable {
     // Criando Integração com FullCalendar
 
     @Column(name = "START")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss'Z'")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime start;
 
     @Column(name = "TITLE")
@@ -57,5 +57,9 @@ public class Appointment implements Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "appointment", fetch = FetchType.LAZY)
     private Set<AppointmentUser> appointmentsUsers;
+
+    public AppointmentUser convertToAppintmentUserModel(UUID userID) {
+        return new AppointmentUser(null, this, userID);
+    }
 
 }
