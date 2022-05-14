@@ -23,14 +23,14 @@ public class AppointmentSpecification implements Specification<Appointment> {
     public Predicate toPredicate(Root<Appointment> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
 
-        query.distinct(true);
-        Join<Appointment, AppointmentUser> appointmentUserJoin = root.join("appointmentsUsers");
+//        query.distinct(true);
+//        Join<Appointment, AppointmentUser> appointmentUserJoin = root.join("appointmentsUsers");
 
         Optional.ofNullable(appointmentFilter.getUserId())
             .ifPresent(p -> predicates.add(criteriaBuilder.equal(root.get("userId"), appointmentFilter.getUserId())));
 
-        Optional.ofNullable(appointmentFilter.getUserId())
-            .ifPresent(p -> predicates.add(criteriaBuilder.equal(appointmentUserJoin.get("userId"), appointmentFilter.getUserId())));
+//        Optional.ofNullable(appointmentFilter.getUserId())
+//            .ifPresent(p -> predicates.add(criteriaBuilder.equal(appointmentUserJoin.get("userId"), appointmentFilter.getUserId())));
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
