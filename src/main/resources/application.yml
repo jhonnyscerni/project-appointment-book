@@ -31,3 +31,17 @@ logging:
       springframework:
         web: DEBUG
     root: INFO
+
+api:
+  url:
+    authuser: 'http://authuser-service'
+
+eureka:
+  client:
+    service-url:
+      defaultZone: 'http://localhost:8761/eureka'
+  instance:
+    hostname: localhost
+
+auth:
+  jwtSecret: t7w!z%C*F-JaNdRgUkXp2s5v8x/A?D(G+KbPeShVmYq3t6w9z$B&E)H@McQfTjWn

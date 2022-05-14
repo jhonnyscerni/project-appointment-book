@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,7 +36,8 @@ public class AppointmentController {
 
     @GetMapping
     public ResponseEntity<Page<Appointment>> search(AppointmentFilter filter,
-        @PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 10) Pageable pageable) {
+        @PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 10) Pageable pageable,
+        Authentication authentication) {
         return ResponseEntity.ok().body(appointmentService.search(filter, pageable));
     }
 
