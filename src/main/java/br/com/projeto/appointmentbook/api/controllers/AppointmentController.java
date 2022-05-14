@@ -4,9 +4,9 @@ package br.com.projeto.appointmentbook.api.controllers;
 import br.com.projeto.appointmentbook.api.request.AppointmentRequest;
 import br.com.projeto.appointmentbook.filters.AppointmentFilter;
 import br.com.projeto.appointmentbook.models.Appointment;
+import br.com.projeto.appointmentbook.models.integration.AppointmentUser;
 import br.com.projeto.appointmentbook.services.AppointmentService;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import br.com.projeto.appointmentbook.services.AppointmentUserService;
 import javax.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -31,6 +31,8 @@ public class AppointmentController {
 
     private final AppointmentService appointmentService;
 
+    private final AppointmentUserService appointmentUserService;
+
     @GetMapping
     public ResponseEntity<Page<Appointment>> search(AppointmentFilter filter,
         @PageableDefault(sort = "id", direction = Direction.ASC, page = 0, size = 10) Pageable pageable) {
@@ -43,8 +45,14 @@ public class AppointmentController {
 
         var appointment = new Appointment();
         BeanUtils.copyProperties(appointmentRequest, appointment);
-        appointment.setDateAppointment(LocalDateTime.now(ZoneId.of("UTC")));
-        appointmentService.save(appointment);
+        Appointment appointmentSalved = appointmentService.save(appointment);
+
+        AppointmentUser appointmentUser = new AppointmentUser();
+        appointmentUser.setAppointment(appointmentSalved);
+        appointmentUser.setUserId(appointmentRequest.getUserId());
+
+        appointmentUserService.save(appointmentUser);
+
         log.debug("POST saveCourse courseId saved {} ", appointmentRequest.getId());
         log.info("Course saved successfully courseId {} ", appointmentRequest.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(appointmentRequest);

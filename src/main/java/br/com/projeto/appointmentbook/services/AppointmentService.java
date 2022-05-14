@@ -6,7 +6,7 @@ import br.com.projeto.appointmentbook.models.Appointment;
 import br.com.projeto.appointmentbook.models.exceptions.EntityInUseException;
 import br.com.projeto.appointmentbook.models.exceptions.EntityNotFoundException;
 import br.com.projeto.appointmentbook.repositories.AppointmentRepository;
-import br.com.projeto.appointmentbook.repositories.specs.AppointmentSpecification;
+import br.com.projeto.appointmentbook.repositories.specs.AppointmentAssocSpecification;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -87,7 +87,7 @@ public class AppointmentService {
     public Page<Appointment> search(AppointmentFilter filter, Pageable pageable) {
         log.debug("GET AppointmentFilter filter received {} ", filter.toString());
 
-        return appointmentRepository.findAll(new AppointmentSpecification(filter), pageable);
+        return appointmentRepository.findAll(new AppointmentAssocSpecification(filter), pageable);
     }
 
     public Appointment save(Appointment appointment) {
