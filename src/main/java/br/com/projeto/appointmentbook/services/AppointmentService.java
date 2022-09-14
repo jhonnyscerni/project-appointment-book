@@ -7,6 +7,7 @@ import br.com.projeto.appointmentbook.models.exceptions.EntityInUseException;
 import br.com.projeto.appointmentbook.models.exceptions.EntityNotFoundException;
 import br.com.projeto.appointmentbook.repositories.AppointmentRepository;
 import br.com.projeto.appointmentbook.repositories.specs.AppointmentAssocSpecification;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -97,5 +98,21 @@ public class AppointmentService {
 
     public Optional<Appointment> findById(UUID uuid) {
         return appointmentRepository.findById(uuid);
+    }
+
+    public List<Appointment> list() {
+        return appointmentRepository.findAll();
+    }
+
+    public Appointment update(UUID id, Appointment appointment) {
+        log.debug("PUT UUID roleId received {} ", id.toString());
+        log.debug("PUT RoleRequest roleRequest received {} ", appointment.toString());
+        Appointment app = buscarOuFalhar(id);
+        app.setDateAppointment(appointment.getDateAppointment());
+        app.setComments(appointment.getComments());
+        app.setStart(appointment.getDateAppointment());
+        app.setTitle(appointment.getTitle());
+        app.setLocationService(appointment.getLocationService());
+        return appointmentRepository.save(app);
     }
 }

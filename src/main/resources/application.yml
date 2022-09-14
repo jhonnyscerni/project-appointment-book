@@ -1,51 +1,11 @@
-server:
-  port: 8082
-  servlet:
-    context-path: /appointment/
-
 spring:
   application:
     name: appointment-service
-  datasource:
-    password: postgres
-    url: jdbc:postgresql://localhost:5432/appointment
-    username: postgres
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        show_sql: true
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
-
-logging:
-  level:
-    br:
-      com:
-        projeto: DEBUG
-    org:
-      hibernate: INFO
-      springframework:
-        web: DEBUG
-    root: INFO
-
-api:
-  url:
-    authuser: 'http://authuser-service'
-
-serviceRegistry:
-  username: serviceregistry
-  password: '123sr'
-
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: 'http://${serviceRegistry.username}:${serviceRegistry.password}@localhost:8761/eureka'
-  instance:
-    hostname: localhost
-
-auth:
-  jwtSecret: t7w!z%C*F-JaNdRgUkXp2s5v8x/A?D(G+KbPeShVmYq3t6w9z$B&E)H@McQfTjWn
+  config:
+    import: 'configserver:'
+  cloud:
+    config:
+      discovery:
+        serviceId: config-server
+      username: configserver
+      password: '123cs'

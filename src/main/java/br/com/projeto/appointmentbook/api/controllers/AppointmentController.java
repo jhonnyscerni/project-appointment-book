@@ -7,6 +7,10 @@ import br.com.projeto.appointmentbook.models.Appointment;
 import br.com.projeto.appointmentbook.models.integration.AppointmentUser;
 import br.com.projeto.appointmentbook.services.AppointmentService;
 import br.com.projeto.appointmentbook.services.AppointmentUserService;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import javax.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -19,7 +23,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,12 +47,41 @@ public class AppointmentController {
         return ResponseEntity.ok().body(appointmentService.search(filter, pageable));
     }
 
+    @GetMapping("list")
+    public ResponseEntity<List<Appointment>> list(Authentication authentication) {
+        return ResponseEntity.ok().body(appointmentService.list());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Appointment> findById(@PathVariable UUID id) {
+        return ResponseEntity.ok().body(appointmentService.buscarOuFalhar(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Appointment> update(@PathVariable UUID id,
+        @RequestBody @Valid Appointment appointment) {
+        return ResponseEntity.status(HttpStatus.OK).body(appointmentService.update(id, appointment));
+    }
+
+
     @PostMapping
     public ResponseEntity<Object> saveAppointment(@RequestBody @Valid AppointmentRequest appointmentRequest){
         log.debug("POST saveAppointment AppointmentRequest received {} ", appointmentRequest.toString());
 
         var appointment = new Appointment();
-        BeanUtils.copyProperties(appointmentRequest, appointment);
+        appointment.setDateAppointment(appointmentRequest.getDateAppointment());
+        appointment.setComments(appointmentRequest.getComments());
+        appointment.setStart(appointmentRequest.getDateAppointment());
+        appointment.setTitle(appointmentRequest.getTitle());
+        appointment.setLocationService(appointmentRequest.getLocationService());
+
+//        Set<AppointmentUser> appointmentSet = new HashSet<>();
+//        AppointmentUser appointmentUser = new AppointmentUser();
+//        appointmentUser.setId(appointmentRequest.getUserId());
+//        appointmentUser.setAppointment(appointment);
+//        appointmentSet.add(appointmentUser);
+
+//        appointment.setAppointmentsUsers(appointmentSet);
         Appointment appointmentSalved = appointmentService.save(appointment);
 
         AppointmentUser appointmentUser = new AppointmentUser();

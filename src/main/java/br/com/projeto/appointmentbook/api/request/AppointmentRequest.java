@@ -1,6 +1,7 @@
 package br.com.projeto.appointmentbook.api.request;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 import lombok.Data;
 
@@ -9,7 +10,9 @@ public class AppointmentRequest {
 
     private UUID id;
 
-    private LocalDateTime dateAppointment;
+    private String title;
+
+    private OffsetDateTime dateAppointment;
 
     private String locationService;
 

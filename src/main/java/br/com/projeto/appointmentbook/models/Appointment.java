@@ -4,6 +4,7 @@ import br.com.projeto.appointmentbook.models.integration.AppointmentUser;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -33,8 +34,7 @@ public class Appointment implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-    private LocalDateTime dateAppointment;
+    private OffsetDateTime dateAppointment;
 
     private String locationService;
 
@@ -43,8 +43,7 @@ public class Appointment implements Serializable {
     // Criando Integração com FullCalendar
 
     @Column(name = "START")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-    private LocalDateTime start;
+    private OffsetDateTime start = dateAppointment;
 
     @Column(name = "TITLE")
     private String title;
@@ -57,6 +56,8 @@ public class Appointment implements Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "appointment", fetch = FetchType.LAZY)
     private Set<AppointmentUser> appointmentsUsers;
+
+    private String groupId;
 
     public AppointmentUser convertToAppintmentUserModel(UUID userID) {
         return new AppointmentUser(null, this, userID);
