@@ -28,25 +28,6 @@ public class AuthUserClient {
         this.restTemplate = restTemplate;
     }
 
-    public Page<UserResponse> getAllUsersByAppointment(UUID appointmentId, Pageable pageable) {
-        List<UserResponse> searchResult = null;
-        String url = REQUEST_URL_AUTHUSER + "/authuser/users?appointmentId=" + appointmentId + "&page=" + pageable.getPageNumber() + "&size="
-            + pageable.getPageSize() + "&sort=" + pageable.getSort().toString().replaceAll(": ", ",");
-        log.debug("Request URL: {} ", url);
-        log.info("Request URL: {} ", url);
-        try {
-            ParameterizedTypeReference<ResponsePageDto<UserResponse>> responseType = new ParameterizedTypeReference<ResponsePageDto<UserResponse>>() {
-            };
-            ResponseEntity<ResponsePageDto<UserResponse>> result = restTemplate.exchange(url, HttpMethod.GET, null, responseType);
-            searchResult = result.getBody().getContent();
-            log.debug("Response Number of Elements: {} ", searchResult.size());
-        } catch (HttpStatusCodeException e) {
-            log.error("Error request /appointments {} ", e);
-        }
-        log.info("Ending request /users appointmentId {} ", appointmentId);
-        return new PageImpl<>(searchResult);
-    }
-
     public ResponseEntity<UserResponse> getOneUserById(UUID userId) {
         String url = REQUEST_URL_AUTHUSER + "/users/" + userId;
         return restTemplate.exchange(url, HttpMethod.GET, null, UserResponse.class);
