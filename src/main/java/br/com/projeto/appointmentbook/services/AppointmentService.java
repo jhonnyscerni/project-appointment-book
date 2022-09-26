@@ -2,14 +2,18 @@ package br.com.projeto.appointmentbook.services;
 
 
 import br.com.projeto.appointmentbook.filters.AppointmentFilter;
+import br.com.projeto.appointmentbook.integration.dtos.NotificationCommandDto;
 import br.com.projeto.appointmentbook.models.Appointment;
 import br.com.projeto.appointmentbook.models.exceptions.EntityInUseException;
 import br.com.projeto.appointmentbook.models.exceptions.EntityNotFoundException;
+import br.com.projeto.appointmentbook.models.integration.User;
+import br.com.projeto.appointmentbook.publishers.NotificationCommandPublisher;
 import br.com.projeto.appointmentbook.repositories.AppointmentRepository;
 import br.com.projeto.appointmentbook.repositories.specs.AppointmentAssocSpecification;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -26,6 +30,8 @@ public class AppointmentService {
     private static final String MSG_OBJECT_IN_USE
         = "Appointment %d cannot be removed as it is in use";
     private final AppointmentRepository appointmentRepository;
+
+    private final NotificationCommandPublisher notificationCommandPublisher;
 
     public Appointment buscarOuFalhar(UUID id) {
         return appointmentRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("There is no appointment registration ", id));
@@ -44,7 +50,6 @@ public class AppointmentService {
                 String.format(MSG_OBJECT_IN_USE, id));
         }
     }
-
 
     public Page<Appointment> search(AppointmentFilter filter, Pageable pageable) {
         log.debug("GET AppointmentFilter filter received {} ", filter.toString());
@@ -74,5 +79,28 @@ public class AppointmentService {
         app.setTitle(appointment.getTitle());
         app.setLocationService(appointment.getLocationService());
         return appointmentRepository.save(app);
+    }
+
+
+    public boolean existsByCourseAndUser(UUID courseId, UUID userId) {
+        return appointmentRepository.existsByAppointmentAndUser(courseId, userId);
+    }
+
+    @Transactional
+    public void saveSubscriptionUserInAppointment(UUID courseId, UUID userId) {
+        appointmentRepository.saveAppointmentUser(courseId, userId);
+    }
+    @Transactional
+    public void saveSubscriptionUserInCourseAndSendNotification(Appointment appointment, User user) {
+        appointmentRepository.saveAppointmentUser(appointment.getId(), user.getUserId());
+        try {
+            var notificationCommandDto = new NotificationCommandDto();
+            notificationCommandDto.setTitle("Bem-Vindo(a) ao Curso: " + appointment.getTitle());
+            notificationCommandDto.setMessage(user.getName() + " a seu compromisso foi realizada com sucesso!");
+            notificationCommandDto.setUserId(user.getUserId());
+            notificationCommandPublisher.publishNotificationCommand(notificationCommandDto);
+        } catch (Exception e) {
+            log.warn("Error sending notification!");
+        }
     }
 }

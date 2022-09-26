@@ -1,11 +1,5 @@
 spring:
   application:
     name: appointment-service
-  config:
-    import: 'configserver:'
-  cloud:
-    config:
-      discovery:
-        serviceId: config-server
-      username: configserver
-      password: '123cs'
+  profiles:
+    active: dev

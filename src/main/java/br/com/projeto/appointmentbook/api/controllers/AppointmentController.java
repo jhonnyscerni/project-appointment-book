@@ -4,17 +4,12 @@ package br.com.projeto.appointmentbook.api.controllers;
 import br.com.projeto.appointmentbook.api.request.AppointmentRequest;
 import br.com.projeto.appointmentbook.filters.AppointmentFilter;
 import br.com.projeto.appointmentbook.models.Appointment;
-import br.com.projeto.appointmentbook.models.integration.AppointmentUser;
 import br.com.projeto.appointmentbook.services.AppointmentService;
-import br.com.projeto.appointmentbook.services.AppointmentUserService;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import javax.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -37,8 +32,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
-
-    private final AppointmentUserService appointmentUserService;
 
     @GetMapping
     public ResponseEntity<Page<Appointment>> search(AppointmentFilter filter,
@@ -75,20 +68,10 @@ public class AppointmentController {
         appointment.setTitle(appointmentRequest.getTitle());
         appointment.setLocationService(appointmentRequest.getLocationService());
 
-//        Set<AppointmentUser> appointmentSet = new HashSet<>();
-//        AppointmentUser appointmentUser = new AppointmentUser();
-//        appointmentUser.setId(appointmentRequest.getUserId());
-//        appointmentUser.setAppointment(appointment);
-//        appointmentSet.add(appointmentUser);
-
-//        appointment.setAppointmentsUsers(appointmentSet);
+        //Atribuindo o compromisso ao usuario
         Appointment appointmentSalved = appointmentService.save(appointment);
+        appointmentService.saveSubscriptionUserInAppointment(appointmentSalved.getId(), appointmentRequest.getUserId());
 
-        AppointmentUser appointmentUser = new AppointmentUser();
-        appointmentUser.setAppointment(appointmentSalved);
-        appointmentUser.setUserId(appointmentRequest.getUserId());
-
-        appointmentUserService.save(appointmentUser);
 
         log.debug("POST saveAppointment appointmentId saved {} ", appointmentRequest.getId());
         log.info("Appointment saved successfully appointmentId {} ", appointmentRequest.getId());

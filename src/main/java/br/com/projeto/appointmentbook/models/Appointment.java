@@ -1,12 +1,9 @@
 package br.com.projeto.appointmentbook.models;
 
-import br.com.projeto.appointmentbook.models.integration.AppointmentUser;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import br.com.projeto.appointmentbook.models.integration.User;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Set;
 import java.util.UUID;
@@ -16,12 +13,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -51,16 +48,14 @@ public class Appointment implements Serializable {
     @Column(name = "CLASS_NAME")
     private String className;
 
-    //Criando Mapeamento com para integração
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @OneToMany(mappedBy = "appointment", fetch = FetchType.LAZY)
-    private Set<AppointmentUser> appointmentsUsers;
-
     private String groupId;
 
-    public AppointmentUser convertToAppintmentUserModel(UUID userID) {
-        return new AppointmentUser(null, this, userID);
-    }
+    //Criando Mapeamento com para integração
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(    name = "TB_APPOINTMENT_USERS",
+        joinColumns = @JoinColumn(name = "appointment_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> users;
 
 }
