@@ -92,7 +92,7 @@ public class AppointmentService {
     }
     @Transactional
     public void saveSubscriptionUserInCourseAndSendNotification(Appointment appointment, User user) {
-        appointmentRepository.saveAppointmentUser(appointment.getId(), user.getUserId());
+        appointmentRepository.saveAppointmentUser(appointment.getAppointmentId(), user.getUserId());
         try {
             var notificationCommandDto = new NotificationCommandDto();
             notificationCommandDto.setTitle("Bem-Vindo(a) ao Curso: " + appointment.getTitle());

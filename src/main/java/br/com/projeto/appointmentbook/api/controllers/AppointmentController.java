@@ -70,7 +70,7 @@ public class AppointmentController {
 
         //Atribuindo o compromisso ao usuario
         Appointment appointmentSalved = appointmentService.save(appointment);
-        appointmentService.saveSubscriptionUserInAppointment(appointmentSalved.getId(), appointmentRequest.getUserId());
+        appointmentService.saveSubscriptionUserInAppointment(appointmentSalved.getAppointmentId(), appointmentRequest.getUserId());
 
 
         log.debug("POST saveAppointment appointmentId saved {} ", appointmentRequest.getId());
