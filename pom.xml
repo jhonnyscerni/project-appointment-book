@@ -14,7 +14,7 @@
     <name>appointment-book</name>
     <description>appointment-book</description>
     <properties>
-        <java.version>11</java.version>
+        <java.version>8</java.version>
         <spring-cloud.version>2021.0.2</spring-cloud.version>
     </properties>
     <dependencies>
