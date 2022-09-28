@@ -13,15 +13,15 @@ import org.springframework.stereotype.Repository;
 public interface AppointmentRepository extends JpaRepository<Appointment, UUID>, JpaSpecificationExecutor<Appointment> {
 
     @Query(value="select case when count(tcu) > 0 THEN true ELSE false END FROM tb_appointment_users tcu WHERE tcu.appointmentId= :appointmentId and tcu.user_id= :userId",nativeQuery = true)
-    boolean existsByAppointmentAndUser(@Param("courseId") UUID courseId, @Param("userId") UUID userId);
+    boolean existsByAppointmentAndUser(@Param("appointmentId") UUID appointmentId, @Param("userId") UUID userId);
 
     @Modifying
     @Query(value="insert into tb_appointment_users values (:appointmentId,:userId);",nativeQuery = true)
-    void saveAppointmentUser(@Param("appointmentId") UUID courseId, @Param("userId") UUID userId);
+    void saveAppointmentUser(@Param("appointmentId") UUID appointmentId, @Param("userId") UUID userId);
 
     @Modifying
     @Query(value="delete from tb_appointment_users where appointmentId= :appointmentId",nativeQuery = true)
-    void deleteAppointmentUserByCourse(@Param("appointmentId") UUID courseId);
+    void deleteAppointmentUserByAppointment(@Param("appointmentId") UUID appointmentId);
 
     @Modifying
     @Query(value="delete from tb_appointment_users where user_id= :userId",nativeQuery = true)

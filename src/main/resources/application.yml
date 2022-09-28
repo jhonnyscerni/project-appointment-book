@@ -2,4 +2,4 @@ spring:
   application:
     name: appointment-service
   profiles:
-    active: dev
+    active: prod
