@@ -94,7 +94,7 @@ public class AppointmentService {
     public void saveSubscriptionUserInCourseAndSendNotification(Appointment appointment, User user) {
         appointmentRepository.saveAppointmentUser(appointment.getAppointmentId(), user.getUserId());
         try {
-            var notificationCommandDto = new NotificationCommandDto();
+            NotificationCommandDto notificationCommandDto = new NotificationCommandDto();
             notificationCommandDto.setTitle("Bem-Vindo(a) ao Curso: " + appointment.getTitle());
             notificationCommandDto.setMessage(user.getName() + " a seu compromisso foi realizada com sucesso!");
             notificationCommandDto.setUserId(user.getUserId());

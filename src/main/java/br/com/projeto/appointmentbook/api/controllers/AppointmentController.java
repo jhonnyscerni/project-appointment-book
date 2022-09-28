@@ -61,7 +61,7 @@ public class AppointmentController {
     public ResponseEntity<Object> saveAppointment(@RequestBody @Valid AppointmentRequest appointmentRequest){
         log.debug("POST saveAppointment AppointmentRequest received {} ", appointmentRequest.toString());
 
-        var appointment = new Appointment();
+        Appointment appointment = new Appointment();
         appointment.setDateAppointment(appointmentRequest.getDateAppointment());
         appointment.setComments(appointmentRequest.getComments());
         appointment.setStart(appointmentRequest.getDateAppointment());
