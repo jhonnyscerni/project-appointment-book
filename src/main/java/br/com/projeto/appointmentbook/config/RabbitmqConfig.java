@@ -21,25 +21,18 @@ public class RabbitmqConfig {
 
     private final CachingConnectionFactory cachingConnectionFactory;
 
-    @Value("${broker.exchange.userEventExchange}")
-    private String exchangeUserEvent;
-
     @Bean
-    public RabbitTemplate rabbitTemplate(){
+    public RabbitTemplate rabbitTemplate() {
         RabbitTemplate template = new RabbitTemplate(cachingConnectionFactory);
         template.setMessageConverter(messageConverter());
         return template;
     }
 
-    private Jackson2JsonMessageConverter messageConverter() {
+    @Bean
+    public Jackson2JsonMessageConverter messageConverter() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         return new Jackson2JsonMessageConverter(objectMapper);
-    }
-
-    @Bean
-    public FanoutExchange fanoutUserEvent(){
-        return new FanoutExchange(exchangeUserEvent);
     }
 
 }
