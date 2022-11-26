@@ -75,13 +75,6 @@ public class AppointmentController {
         appointment.setTitle(appointmentRequest.getTitle());
         appointment.setLocationService(appointmentRequest.getLocationService());
 
-//        Set<AppointmentUser> appointmentSet = new HashSet<>();
-//        AppointmentUser appointmentUser = new AppointmentUser();
-//        appointmentUser.setId(appointmentRequest.getUserId());
-//        appointmentUser.setAppointment(appointment);
-//        appointmentSet.add(appointmentUser);
-
-//        appointment.setAppointmentsUsers(appointmentSet);
         Appointment appointmentSalved = appointmentService.save(appointment);
 
         AppointmentUser appointmentUser = new AppointmentUser();
